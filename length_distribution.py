@@ -22,7 +22,7 @@ def get_distribution(filename):
         f.close()
 
     fig, ax = plt.subplots()
-    n, bins, patches = plt.hist(length_list, 20, rwidth=0.8, align='mid', density=True, alpha=0.75)
+    n, bins, patches = plt.hist(length_list, 50, rwidth=0.8, align='mid', density=True, alpha=0.75)
 
     x = np.linspace(min_len, max_len, 1000)
     plt.plot(x, stats.norm.pdf(x, mean, std))
@@ -30,7 +30,7 @@ def get_distribution(filename):
     plt.title('Read length histogram')
     plt.grid(True)
     plt.show()
-    plt.savefig('hist_new.png')
+    plt.savefig('plots/length_hist.png')
     print('Length distribution info:')
     print('-' * 80)
     print(f'{mean = }\n{std = }\nmin = {min_len}\nmax = {max_len}')
