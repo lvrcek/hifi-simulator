@@ -28,7 +28,7 @@ def plot_lengths(lenghts):
     filename = re.findall(pattern, filename)[0]
     plt.savefig(f'plots/{filename}_length.png')
     plt.show()
-    with open(f'logs/{filename_lenghts.log}') as f:
+    with open(f'logs/{filename}_lenghts.log') as f:
         f.write(f'----- LENGTH INFO -----\n')
         f.write(f'Num seq\t\t=\t{len(lenghts)}\n')
         f.write(f'Median len\t=\t{median_len}\n')
@@ -55,7 +55,7 @@ def plot_qscores(qualities):
     filename = re.findall(pattern, filename)[0]
     plt.savefig(f'plots/{filename}_qscore.png')
     plt.show()
-    with open(f'logs/{filename_qscores.log}') as f:
+    with open(f'logs/{filename}_qscores.log') as f:
         f.write(f'----- Q-SCORE INFO -----\n')
         f.write(f'Num seq\t\t=\t{len(qualities)}\n')
         f.write(f'Median Q\t=\t{median_q}\n')
@@ -69,6 +69,7 @@ def plot_qscores(qualities):
 def main(args):
     filename = args.filename
     lengths, qualities = [], []
+    find_l_dist,find_q_dist = True, True
     try:
         if filename[-2:] == 'gz':
             f = gzip.open(filename, 'rt')
