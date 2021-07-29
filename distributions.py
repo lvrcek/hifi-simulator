@@ -30,11 +30,12 @@ def plot_lengths(lengths, name):
     with open(f'logs/{name}_length.log', 'w') as f:
         f.write(f'----- LENGTH INFO -----\n')
         f.write(f'Num seq\t\t=\t{len(lengths)}\n')
+        f.write(f'Min len\t\t=\t{min_len}\n')
         f.write(f'Median len\t=\t{median_len}\n')
-        f.write(f'Mean len\t\t=\t{mean_len}\n')
+        f.write(f'Mean len\t=\t{mean_len}\n')
         f.write(f'Std len\t\t=\t{std_len}\n')
         f.write(f'Max len\t\t=\t{max_len}\n')
-        f.write(f'-------------------------')
+        f.write(f'-------------------------\n')
 
 
 
@@ -54,11 +55,12 @@ def plot_qscores(qualities, name):
     with open(f'logs/{name}_qscores.log', 'w') as f:
         f.write(f'----- Q-SCORE INFO -----\n')
         f.write(f'Num seq\t\t=\t{len(qualities)}\n')
+        f.write(f'Min Q\t\t=\t{min_q}\n')
         f.write(f'Median Q\t=\t{median_q}\n')
         f.write(f'Mean Q\t\t=\t{mean_q}\n')
         f.write(f'Std Q\t\t=\t{std_q}\n')
         f.write(f'Max Q\t\t=\t{max_q}\n')
-        f.write(f'--------------------------')
+        f.write(f'--------------------------\n')
 
 
 def plot_accuracies(accuracies, name):
@@ -75,13 +77,14 @@ def plot_accuracies(accuracies, name):
     plt.grid(True)
     plt.savefig(f'plots/{name}_acc.png')
     with open(f'logs/{name}_acc.log', 'w') as f:
-        f.write(f'----- Q-SCORE INFO -----\n')
+        f.write(f'----- ACCURACY INFO -----\n')
         f.write(f'Num seq\t\t=\t{len(accuracies)}\n')
+        f.write(f'Min acc\t\t=\t{min_acc}\n')
         f.write(f'Median acc\t=\t{median_acc}\n')
-        f.write(f'Mean acc\t\t=\t{mean_acc}\n')
+        f.write(f'Mean acc\t=\t{mean_acc}\n')
         f.write(f'Std acc\t\t=\t{std_acc}\n')
         f.write(f'Max acc\t\t=\t{max_acc}\n')
-        f.write(f'--------------------------')
+        f.write(f'-------------------------\n')
 
 
 def get_acc(q):
