@@ -15,12 +15,14 @@ def get_step(reference_length, length_mean, depth):
     return step_mean, step_std
 
 
-def introduce_errors(read, mismatch, indel)
+def introduce_errors(read, subs, indel):
     i = 0
 
-    while i < len(read):
+    while True:
+        if i < len(read):
+            break
 
-        if random() < mismatch:
+        if random() < subs:
             r = random()
             if r < 0.25:
                 c = 'A'
@@ -37,18 +39,18 @@ def introduce_errors(read, mismatch, indel)
         if random() < indel:
             r = random()
             if r < indel / 2:
-                read = read[:i] + read[i+1]
+                read = read[:i] + read[i+1:]
                 continue
             if r > 1 - indel / 2:
-                read = read[:i] + 2 * read[i] + read[i+1]  # Only homopolymer insertion, not a random one
-                i += 2
+                read = read[:i] + 2 * read[i] + read[i+1:]  # Only homopolymer insertion, not a random one
+                i += 1
                 continue
         i += 1
 
     return read
 
 
-def sample_strand(reference, reads_list, length_mean, length_std, step_mean, step_std, mismatch, indel, strand):
+def sample_strand(reference, reads_list, length_mean, length_std, step_mean, step_std, subs, indel, strand):
     idx = len(reads_list)
     position = 0
     stop = len(reference)
@@ -60,7 +62,7 @@ def sample_strand(reference, reads_list, length_mean, length_std, step_mean, ste
         else:
             break
         read.id = str(idx)
-        read = introduce_errors(read, mismathc, indel)
+        read = introduce_errors(read, subs, indel)
         if strand == '+':
             read.description = f'idx={idx}, strand=+, start={position}, end={position+length}'
         else:
@@ -84,7 +86,7 @@ def main(args):
     length_mean = args.length_mean
     length_std = args.length_std if args.length_std is not None else length_mean * 0.075
 
-    mismatch = args.mismatch
+    subs = args.subs
     indel = args.indel
 
     reference = next(SeqIO.parse(reference_path, 'fasta'))
@@ -94,8 +96,8 @@ def main(args):
     reads_list = []
 
     # Sample positive and negative strand
-    reads_list += sample_strand(reference, reads_list, length_mean, length_std, step_mean, step_std, mismatch, indel, strand='+')
-    reads_list += sample_strand(reference_rc, reads_list, length_mean, length_std, step_mean, step_std, mismatch, indel, strand='-')
+    reads_list += sample_strand(reference, reads_list, length_mean, length_std, step_mean, step_std, subs, indel, strand='+')
+    reads_list += sample_strand(reference_rc, reads_list, length_mean, length_std, step_mean, step_std, subs, indel, strand='-')
 
     SeqIO.write(reads_list, out_path, 'fastq')
 
@@ -107,7 +109,7 @@ if __name__ == '__main__':
     parser.add_argument('--length-mean', type=int, default=20000, help='mean length of the simulated reads')
     parser.add_argument('--length-std', type=int, help='standard deviation in length of the simulated reads')
     parser.add_argument('--depth', type=int, default=20, help='sequencing depth to be simulated')
-    parser.add_argument('--mismatch', type=float, default=0.0, help='mismatch percentage')
+    parser.add_argument('--subs', type=float, default=0.0, help='substitution percentage')
     parser.add_argument('--indel', type=float, default=0.0, help='indel percentage')
     args = parser.parse_args()
     main(args)
