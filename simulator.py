@@ -17,9 +17,8 @@ def get_step(reference_length, length_mean, depth):
 
 def introduce_errors(read, subs, indel):
     i = 0
-
     while True:
-        if i < len(read):
+        if i >= len(read):
             break
 
         if random() < subs:
@@ -62,19 +61,19 @@ def sample_strand(reference, reads_list, length_mean, length_std, step_mean, ste
         else:
             break
         read.id = str(idx)
-        read = introduce_errors(read, subs, indel)
+        read.seq = introduce_errors(read.seq, subs, indel)
         if strand == '+':
             read.description = f'idx={idx}, strand=+, start={position}, end={position+length}'
         else:
             read.description = f'idx={idx}, strand=-, start={len(reference)-position}, end={len(reference)-position-length}'
 
-        read.letter_annotations = {'phred_quality': [50] * len(read)} 
+        read.letter_annotations = {'phred_quality': [50] * len(read)}
         reads_list.append(read)
         step = int(np.random.normal(step_mean, step_std))
         position += step
         idx += 1
 
-    return reads_list
+    # return reads_list
 
 
 def main(args):
@@ -96,9 +95,8 @@ def main(args):
     reads_list = []
 
     # Sample positive and negative strand
-    reads_list += sample_strand(reference, reads_list, length_mean, length_std, step_mean, step_std, subs, indel, strand='+')
-    reads_list += sample_strand(reference_rc, reads_list, length_mean, length_std, step_mean, step_std, subs, indel, strand='-')
-
+    sample_strand(reference, reads_list, length_mean, length_std, step_mean, step_std, subs, indel, strand='+')
+    sample_strand(reference_rc, reads_list, length_mean, length_std, step_mean, step_std, subs, indel, strand='-')
     SeqIO.write(reads_list, out_path, 'fastq')
 
 
