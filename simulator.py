@@ -81,7 +81,7 @@ def main(args):
     out_path = os.path.abspath(args.out)
     assert re.findall('.*\.([A-Za-z]*)', out_path)[-1] in ('fastq', 'fq', 'fasta', 'fa'), \
             "Output path should be in the FASTA/Q format"
-    depth = args.depth
+    depth = args.depth  # That's actually depth per strand, it has to be divided by 2 (see below for step)
     length_mean = args.length_mean
     length_std = args.length_std if args.length_std is not None else length_mean * 0.075
 
@@ -91,7 +91,7 @@ def main(args):
     reference = next(SeqIO.parse(reference_path, 'fasta'))
     reference_rc = reference.reverse_complement()
 
-    step_mean, step_std = get_step(len(reference), length_mean, depth)
+    step_mean, step_std = get_step(len(reference), length_mean, depth // 2)
     reads_list = []
 
     # Sample positive and negative strand
